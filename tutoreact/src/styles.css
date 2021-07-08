@@ -2,3 +2,10 @@ body {
     font: 14px "Century Gothic", Futura, sans-serif;
     margin: 20px;
 }
+
+.cardChien{
+    background: rgba(182, 182, 182, 0.2);
+}
+.cardChat{
+    background: rgba(147, 147, 147, 0.19);
+}
