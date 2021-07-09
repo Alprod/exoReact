@@ -2,11 +2,57 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles.css';
 
-
 const docElementRootId = document.getElementById('root')
+const docElementClockId = document.getElementById('clock')
+
+const element = <h1 className="text-center m-5">Le cycle de vie</h1>
+ReactDOM.render(element, docElementRootId);
+function FormatDate(props) {
+    return <h2 className="text-center"><span className="text-danger fst-italic fw-light">{props.date.toLocaleTimeString()}</span></h2>
+}
+class Clock extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            date: new Date()
+        }
+    }
+
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.tick(),1000
+        )
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID)
+    }
+
+    tick(){
+        this.setState({
+            date: new Date()
+        })
+    }
+
+    render() {
+        return (
+            <div>
+                <h1 className="text-center">Bonjour, tout le monde</h1>
+                <FormatDate date={this.state.date}/>
+            </div>
+        )
+    }
+}
+function Application(){
+    return (
+        <div>
+            <Clock/>
+        </div>
+    )
+}
+    ReactDOM.render(<Application/>, docElementClockId)
 
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+
+
 
