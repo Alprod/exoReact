@@ -7,6 +7,8 @@ const docElementClockId = document.getElementById('clock')
 const docElementClickWithoutBindId = document.getElementById('clickWithoutBind')
 const docElementButtonConnexionId = document.getElementById('buttonConnexion')
 const docElementListeId = document.getElementById('liste')
+const docElementFormId = document.getElementById('form')
+const docElementFormAreaId = document.getElementById('formArea')
 
 function FormatDate(props) {
     return <h2 className="text-center"><span className="text-danger fst-italic fw-light">{props.date.toLocaleTimeString()}</span></h2>
@@ -108,7 +110,7 @@ ReactDOM.render(
 )
 
 const capitalize = (word) => ((word) ? word[0].toUpperCase() + word.slice(1) : 'inconnu')
-const nomUser = 'kassandra'
+const nomUser = 'marie'
 
 function UserGreeting(props) {
     return <div className="alert alert-success d-grid gap-2 col-8 mx-auto my-4" role="alert">
@@ -148,7 +150,7 @@ function Greeting(props) {
 }
 
 function LoginButton(props){
-    return <button className="btn btn-primary" onClick={props.onClick}>
+    return <button type="submit" className="btn btn-primary" onClick={props.onClick}>
             Connexion
         </button>
 }
@@ -198,8 +200,93 @@ class LoginControl extends React.Component{
 
 ReactDOM.render(<LoginControl/>,docElementButtonConnexionId)
 
-const numbers = [2,4,6,8,10]
-const double = numbers.map((number) => <li> {number * 2} </li>)
-ReactDOM.render(<ul className="list-unstyled">{double}</ul>, docElementListeId)
+const numbers = ['Alain','Julien','Marck','frank', 'julie']
+function List(props) {
+    const listing = props.listing
+    listing.push(props.nom)
+    const itemList = listing.map((list) => <li key={list.toString()}>{capitalize(list)}</li>)
+    return (
+        <ul className="list-unstyled">{itemList}</ul>
+    )
+}
+numbers.push('katrine')
+ReactDOM.render(<List listing={numbers} nom="massie"/>, docElementListeId)
 
 
+class NomForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {value: ''}
+
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    handleChange(change) {
+        this.setState({value: change.target.value})
+    }
+
+    handleSubmit(submit) {
+        const input = this.state.value
+        alert((!input) ? 'Veuillez entrer un nom'  : `Le nom a été soumis : ${input}`)
+        //submit.preventDefault();
+
+    }
+
+    render() {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <div className="mb-3">
+                    <label htmlFor="exampleInputEmail1" className="form-label">Votre nom</label>
+                    <input type="text"
+                           onChange={this.handleChange}
+                           className="form-control"
+                           value={this.state.value}
+                           id="exampleInputEmail1" />
+                </div>
+                <input type="submit" className="btn btn-primary" value="Envoyer"/>
+            </form>
+
+        )
+    }
+}
+
+class TextArea extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {value : ''};
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({value : event.target.value})
+    }
+    handleSubmit(event) {
+        const area = this.state.value;
+        alert((!area) ? 'Aucun message envoyé' : 'Un essai à été envoyer il dit : ' + area);
+        event.preventDefault()
+    }
+
+    render(){
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <div className="mb-3 mt-5">
+                    <label htmlFor="textarea" className="form-label">Message</label>
+                    <textarea name="textarea"
+                              id="area"
+                              cols="30"
+                              rows="10"
+                              className="form-control"
+                              value={this.state.value}
+                              onChange={this.handleChange} />
+                </div>
+                <input type="submit" className="btn btn-primary" value="Envoyer"/>
+            </form>
+        )
+    }
+}
+
+ReactDOM.render(<NomForm />, docElementFormId)
+ReactDOM.render(<TextArea />, docElementFormAreaId)
