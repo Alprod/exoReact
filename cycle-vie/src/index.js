@@ -9,6 +9,8 @@ const docElementButtonConnexionId = document.getElementById('buttonConnexion')
 const docElementListeId = document.getElementById('liste')
 const docElementFormId = document.getElementById('form')
 const docElementFormAreaId = document.getElementById('formArea')
+const docElementFormSelectId = document.getElementById('formSelect')
+const docElementFormlaireId = document.getElementById('formulaire')
 
 function FormatDate(props) {
     return <h2 className="text-center"><span className="text-danger fst-italic fw-light">{props.date.toLocaleTimeString()}</span></h2>
@@ -132,7 +134,7 @@ function FormConnection() {
                 <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">Email</label>
                     <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
-                        <div id="emailHelp" className="form-text fs-6">Nous ne partagerons jamais votre e-mail avec quelqu'un d'autre.</div>
+                        <div id="emailHelp" className="form-text text-muted fst-italic fs-6">Nous ne partagerons jamais votre e-mail avec quelqu'un d'autre.</div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="exampleInputPassword1" className="form-label">Mot de passe</label>
@@ -150,14 +152,11 @@ function Greeting(props) {
 }
 
 function LoginButton(props){
-    return <button type="submit" className="btn btn-primary" onClick={props.onClick}>
-            Connexion
-        </button>
+    return <input type="submit" className="btn btn-primary" onClick={props.onClick} defaultValue={props.valueButton}/>
+
 }
 function LogoutButton(props){
-    return <button className="btn btn-success" onClick={props.onClick}>
-            Déconnexion
-        </button>
+    return <input type="submit" className="btn btn-success" onClick={props.onClick} defaultValue={props.valueButton} />
 }
 
 class LoginControl extends React.Component{
@@ -183,9 +182,9 @@ class LoginControl extends React.Component{
         const isLoggeIn = this.state.isLoggeIn;
         let  button;
         if(isLoggeIn) {
-           button = <LogoutButton onClick={this.handleLogoutClick}/>
+           button = <LogoutButton onClick={this.handleLogoutClick} valueButton="Déconexion"/>
         }else {
-           button = <LoginButton onClick={this.handleLoginClick} />
+           button = <LoginButton onClick={this.handleLoginClick} valueButton="Connexion" />
         }
         return (
             <form>
@@ -204,6 +203,7 @@ const numbers = ['Alain','Julien','Marck','frank', 'julie']
 function List(props) {
     const listing = props.listing
     listing.push(props.nom)
+    //Assignier "key" afin de donner une valeur aux clés de votre tableau
     const itemList = listing.map((list) => <li key={list.toString()}>{capitalize(list)}</li>)
     return (
         <ul className="list-unstyled">{itemList}</ul>
@@ -229,7 +229,7 @@ class NomForm extends React.Component {
     handleSubmit(submit) {
         const input = this.state.value
         alert((!input) ? 'Veuillez entrer un nom'  : `Le nom a été soumis : ${input}`)
-        //submit.preventDefault();
+        submit.preventDefault();
 
     }
 
@@ -254,10 +254,11 @@ class NomForm extends React.Component {
 class TextArea extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {value : ''};
+        this.state = {value : 'Écrire votre message...'};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
     }
 
     handleChange(event) {
@@ -282,7 +283,43 @@ class TextArea extends React.Component {
                               value={this.state.value}
                               onChange={this.handleChange} />
                 </div>
+
                 <input type="submit" className="btn btn-primary" value="Envoyer"/>
+            </form>
+        )
+    }
+}
+
+class FormSelect extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {value : 'Pomme'};
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+
+    handleChange(event) {
+        this.setState({value : event.target.value})
+    }
+    handleSubmit(event) {
+        const area = this.state.value;
+        alert('Votre parfum favori est : ' + area);
+        event.preventDefault()
+    }
+    render(){
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <div className="mb-3 mt-5">
+                    <select className="form-select" value={this.state.value} onChange={this.handleChange} aria-label="Default select example">
+                        <option value="pomme">Pomme</option>
+                        <option value="fraise">Fraise</option>
+                        <option value="framboise">Framboise</option>
+                        <option value="murs">murs</option>
+                    </select>
+                </div>
+                <input type="submit" className="btn btn-primary" value="Envoyé"/>
             </form>
         )
     }
@@ -290,3 +327,112 @@ class TextArea extends React.Component {
 
 ReactDOM.render(<NomForm />, docElementFormId)
 ReactDOM.render(<TextArea />, docElementFormAreaId)
+ReactDOM.render(<FormSelect />, docElementFormSelectId)
+
+class Formulaire extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            formValid: false
+        }
+        this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleInputValidButton = this.handleInputValidButton.bind(this)
+    }
+
+    handleInputChange(event){
+        const target = event.target;
+        const name = target.name
+        this.setState({
+            [name]: target.value
+        })
+    }
+
+    handleInputValidButton(){
+        this.setState({formValid: true})
+    }
+
+
+
+    render() {
+        return (
+            <FormAllView onChange={this.handleInputChange}
+                         onClick={this.handleInputValidButton}
+                         name={this.state}
+                         formValid={this.state.formValid}
+            />
+        )
+    }
+}
+
+function FormAllView(props){
+    const formValid = props.formValid
+    if(formValid){
+        return <RecapView name={props.name}/>
+    }
+    return <FormulaireInput onClick={props.onClick}
+                            onChange={props.onChange}
+                            formValid={props.formValid}
+
+    />
+}
+
+function FormulaireInput(props) {
+    return (
+        <form >
+            <FormInput label="Nom" type="text" name="userName" onChange={props.onChange} />
+            <FormInput label="Prénom" type="text" name="userPrenom" onChange={props.onChange} />
+            <FormInput label="Email" type="email" name="userEmail" onChange={props.onChange} />
+            <TextResume label="Descripotion" name="userDescription" onChange={props.onChange}/>
+            <LoginButton onClick={props.onClick} valueButton="Envoyé"/>
+        </form>
+    )
+}
+
+
+function FormInput(props){
+    return (
+        <div className="mb-3">
+            <label className="form-label">{props.label}</label>
+            <input type={props.type}
+                   name={props.name}
+                   onChange={props.onChange}
+                   className="form-control"/>
+        </div>
+    )
+}
+
+function TextResume(props) {
+    return (
+        <div className="mb-3 mt-5">
+            <label className="form-label">{props.label}</label>
+            <textarea name={props.name}
+                      id="area"
+                      cols="30"
+                      rows="10"
+                      className="form-control"
+                      onChange={props.onChange} />
+        </div>
+    )
+}
+
+function RecapView(props) {
+    const identity = props.name
+    return (
+        <div className="card text-center">
+            <div className="card-header">
+                Profile
+            </div>
+            <div className="card-body">
+                <h5 className="card-title">{identity.userName +' '+ identity.userPrenom}</h5>
+                <p className="card-text">{identity.userEmail}</p>
+                <p className="card-text">{identity.userDescription}</p>
+            </div>
+            <div className="card-footer text-muted">
+                React
+            </div>
+        </div>
+    )
+}
+
+
+ReactDOM.render(<Formulaire />, docElementFormlaireId)
