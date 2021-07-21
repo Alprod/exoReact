@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDom from 'react-dom';
+
 
 function FormatDate(props) {
     return <h2 className="text-center"><span className="text-danger fst-italic fw-light">{props.date.toLocaleTimeString()}</span></h2>

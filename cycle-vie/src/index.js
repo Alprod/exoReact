@@ -13,6 +13,7 @@ const docElementButtonConnexionId = document.getElementById('buttonConnexion')
 const docElementListeId = document.getElementById('liste')
 const docElementFormId = document.getElementById('form')
 const docElementFormlaireId = document.getElementById('formulaire')
+const docElementCompteurId = document.getElementById('compteur')
 
 
 
@@ -83,8 +84,33 @@ function List(props) {
 numbers.push('katrine')
 ReactDOM.render(<List listing={numbers} nom="massie"/>, docElementListeId)
 
-
 ReactDOM.render(<TraitementFormulaire />, docElementFormId)
 
-
 ReactDOM.render(<Formulaire />, docElementFormlaireId)
+
+class Compteur extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            count: 0
+        }
+        this.newCounterValue = this.newCounterValue.bind(this)
+    }
+
+    newCounterValue(){
+        this.setState( (prevState, props) => {
+            return {count: prevState.count + 1}
+        })
+    }
+
+    render() {
+        return (
+            <div className="my-5">
+                <p>Nombre de click : {this.state.count}</p>
+                <button className="btn btn-info" onClick={this.newCounterValue}> Appui là abruti</button>
+            </div>
+        )
+    }
+}
+
+ReactDOM.render(<Compteur />, docElementCompteurId)

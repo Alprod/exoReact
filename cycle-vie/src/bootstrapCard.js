@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDom from 'react-dom';
+
 
 function CardBody(props){
     const identity = props.identity
